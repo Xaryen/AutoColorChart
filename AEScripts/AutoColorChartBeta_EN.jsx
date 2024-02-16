@@ -351,7 +351,7 @@ var palette = (function() {
 	var extractTabText = extractTab.add("tab", undefined, undefined, {
 		name: "extractTabText"
 	});
-	extractTabText.text = "カラーグループから";
+	extractTabText.text = "Color Groups";
 	extractTabText.orientation = "column";
 	extractTabText.alignChildren = ["center", "top"];
 	extractTabText.spacing = 10;
@@ -369,7 +369,7 @@ var palette = (function() {
 	var colorChartImageTxt = ColorNameGroup.add("statictext", undefined, undefined, {
 		name: "colorChartImageTxt"
 	});
-	colorChartImageTxt.text = "色見本名";
+	colorChartImageTxt.text = "Color Sample";
 	colorChartImageTxt.preferredSize.width = 100;
 	colorChartImageTxt.alignment = ["left", "top"];
 
@@ -440,7 +440,7 @@ var palette = (function() {
 		items: colorSlect_array,
 		multiselect: false,
 		numberOfColumns: 2,
-		columnTitles: ['番号', '色'],
+		columnTitles: ['Grp', 'Color'],
 		showHeaders: true
 	});
 	colorSlect.preferredSize.width = 200;
@@ -460,7 +460,7 @@ var palette = (function() {
 	var extractGruopAllBtn = btnGroup.add("button", undefined, undefined, {
 		name: "extractAllBtn"
 	});
-	extractGruopAllBtn.text = "グループ全部抽出";
+	extractGruopAllBtn.text = "Extract Color Group";
 	extractGruopAllBtn.preferredSize.width = 111;
 	extractGruopAllBtn.preferredSize.height = 40;
 	extractGruopAllBtn.enabled = false;
@@ -469,7 +469,7 @@ var palette = (function() {
 	var colorPickerBtn = btnGroup.add("button", undefined, undefined, {
 		name: "BtcolorPickerBtnn0"
 	});
-	colorPickerBtn.text = "カラーピッカー";
+	colorPickerBtn.text = "Color Picker";
 	colorPickerBtn.preferredSize.width = 111;
 	colorPickerBtn.preferredSize.height = 27;
 	colorPickerBtn.enabled = false;
@@ -493,7 +493,7 @@ var palette = (function() {
 	var openCategroyBtn = btnGroup.add("button", undefined, undefined, {
 		name: "openCategroyBtn"
 	});
-	openCategroyBtn.text = "タイプパネル開く";
+	openCategroyBtn.text = "Tone Panel";
 	openCategroyBtn.preferredSize.width = 111;
 	openCategroyBtn.enabled = false;
 
@@ -501,7 +501,7 @@ var palette = (function() {
 	var openFileBtn = btnGroup.add("button", undefined, undefined, {
 		name: "openFileBtn"
 	});
-	openFileBtn.text = "色見本データ開く";
+	openFileBtn.text = "Select Color Data";
 	openFileBtn.preferredSize.width = 111;
 
 	/*
@@ -548,20 +548,20 @@ var palette = (function() {
 
 	// 旧版JSON映射表
 	const keyMappings = {
-		"hi": "Hi",
-		"normal": "ノーマル",
-		"shadow": "1号影",
-		"2nd_shadow": "2号影",
-		"hi_in_shadow": "影中Hi",
-		"hi_in_2nd_shadow": "2号影中Hi",
-		"shadow_s_hi": "影のHi",
-		"2nd_shadow_s_hi": "2号影のHi",
-		"2nd_shadow_hi": "2号影のHi",
+		"hi": "Highlight",
+		"normal": "Normal",
+		"shadow": "1st Shadow",
+		"2nd_shadow": "2nd Shadow",
+		"hi_in_shadow": "Shadow Hi",
+		"hi_in_2nd_shadow": "2nd Shadow Hi",
+		"shadow_s_hi": "Tone2 Hi",
+		"2nd_shadow_s_hi": "Tone3 Hi",
+		"2nd_shadow_hi": "Tone3 Hi",
 		"normal_tp": "TP"
 	};
 
 	var userSelection = {
-		extractColorMode: "選択中クループのみ"
+		extractColorMode: "色見本全部"
 	};
 
 	const colorDisplays = [Color1Disp, Color2Disp, Color3Disp, 
@@ -655,7 +655,7 @@ var palette = (function() {
 	function colorPicker(startValue) {
 		// 活动合成
 		if (!app.project.activeItem || !(app.project.activeItem instanceof CompItem)) {
-			alert("コンポを開いてください!", scriptName);
+			alert("Please select a composition", scriptName);
 			return [];
 		}
 
@@ -736,19 +736,19 @@ var palette = (function() {
 	// 创建按颜色类型去色窗口
 	// ====================
 	function createButtonsFromJson(jsonData) {
-		var myWindow = new Window("palette", "色タイプから", undefined);
+		var myWindow = new Window("palette", "Extract tone", undefined);
 	
 		for (var imageName in jsonData) {
 			var imageGroup = myWindow.add("group", undefined, imageName);
 			imageGroup.orientation = "column";
 			imageGroup.alignChildren = ["left", "center"]
-			imageGroup.add("statictext", undefined, "色見本 " + imageName + " 中の色");
+			imageGroup.add("statictext", undefined, "Color From:" + imageName);
 			 // 添加单选按钮组
 			var radioGroup = imageGroup.add("group", undefined);
 			radioGroup.orientation = "row";
-			radioGroup.add("statictext", undefined, "抽出参照モード：");
-			var allColorsRadio = radioGroup.add("radiobutton", undefined, "色見本全部");
-			var singleColorRadio = radioGroup.add("radiobutton", undefined, "選択中クループのみ");
+			radioGroup.add("statictext", undefined, "Extract From:");
+			var allColorsRadio = radioGroup.add("radiobutton", undefined, "All Color Groups");
+			var singleColorRadio = radioGroup.add("radiobutton", undefined, "Selected Color Group");
 			singleColorRadio.value = true; // 默认选择"仅从选中的组"
 		 
 			allColorsRadio.onClick = function() { userSelection.extractColorMode = "色見本全部"; }
@@ -794,13 +794,13 @@ var palette = (function() {
 	// 提取选择组中单一指定颜色
 	// ===============
 	function extractOneColor(colorType) {
-		if(!app.project.activeItem) {alert("コンポを開いてください", scriptName); return;}
+		if(!app.project.activeItem) {alert("Please select a composition", scriptName); return;}
 		var selectedLayers = app.project.activeItem.selectedLayers;
 		var newLayer;
 		if (selectedLayers.length > 0) {
 			var selectedItems = colorSlect.selection;
 			if (!selectedItems) {
-				alert("リストから一つ選んでください.", scriptName);
+				alert("Please select a color group", scriptName);
 				return;
 			}
 
