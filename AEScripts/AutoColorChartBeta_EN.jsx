@@ -746,7 +746,7 @@ var palette = (function() {
 			 // 添加单选按钮组
 			var radioGroup = imageGroup.add("group", undefined);
 			radioGroup.orientation = "row";
-			radioGroup.add("statictext", undefined, "Extract From:");
+			radioGroup.add("statictext", undefined, "Extract From: ");
 			var allColorsRadio = radioGroup.add("radiobutton", undefined, "All Color Groups");
 			var singleColorRadio = radioGroup.add("radiobutton", undefined, "Selected Color Group");
 			singleColorRadio.value = true; // 默认选择"仅从选中的组"
@@ -875,7 +875,7 @@ var palette = (function() {
 			} catch(e) {
 				alert(e);
 			}
-		} else alert("レイヤー一つ選んでください", scriptName); 
+		} else alert("Please select a layer", scriptName); 
 		return newLayer;
 	}
 
@@ -927,7 +927,7 @@ var palette = (function() {
 				colorSlect.selection = colorSlect.find(groupNumber.toString());
 				
 			} else {
-				alert("指定の色が見つかりませんでした，色見本データを確認してください。", scriptName);
+				alert("Specified color was not found in the color chart", scriptName);
 			}
 
 		} catch(e) {
@@ -970,7 +970,7 @@ var palette = (function() {
 	// ===============
 	openFileBtn.onClick = function() {
 		if(typeof myWindow == 'object') myWindow.close()
-		var file = File.openDialog("色見本データ開く");
+		var file = File.openDialog("Select color data");
 		if (file !== null) {
 			var fileNameArray = file.name.toLowerCase().split('.');
 			var fileExtension = fileNameArray[fileNameArray.length - 1];
@@ -1038,7 +1038,7 @@ var palette = (function() {
 				var selectedItems = colorSlect.selection;
 	
 				if (!selectedItems) {
-					alert("リストから一つ選んでください", scriptName);
+					alert("Please select a color group", scriptName);
 					return;
 				}
 	
@@ -1080,7 +1080,7 @@ var palette = (function() {
 				}
 			}
 		} else {
-			alert("レイヤー一つ選んでください!", scriptName);
+			alert("Please select a layer", scriptName);
 		}
 	}
 	
